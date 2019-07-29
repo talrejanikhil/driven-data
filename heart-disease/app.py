@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.preprocessing import RobustScaler, MinMaxScaler
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 from sklearn.model_selection import GridSearchCV, train_test_split
@@ -25,11 +24,12 @@ def categorize_label(x):
 
 def clean_data(df, use_fs=True):
     # convert object to categorical data
-    string_labels = ['thal']
-    df[string_labels] = df[string_labels].apply(categorize_label, axis=0)
-    df = pd.get_dummies(df, drop_first=True)
+    if 'thal' in df.columns:
+        string_labels = ['thal']
+        df[string_labels] = df[string_labels].apply(categorize_label, axis=0)
+        df = pd.get_dummies(df, drop_first=True)
     # drop some columns
-    to_drop = ['fasting_blood_sugar_gt_120_mg_per_dl','slope_of_peak_exercise_st_segment']
+    to_drop = ['fasting_blood_sugar_gt_120_mg_per_dl', 'slope_of_peak_exercise_st_segment']
     df.drop(to_drop, axis=1, inplace=True)
     # normalize high variance columns
     # high_variance_cols = ['resting_blood_pressure']
