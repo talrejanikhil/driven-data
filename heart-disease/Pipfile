@@ -1,7 +1,0 @@
-[packages]
-scipy = "*"
-numpy = "*"
-pandas = "*"
-sklearn = "*"
-matplotlib = "*"
-tabulate = "*"
