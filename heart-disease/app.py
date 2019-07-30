@@ -47,7 +47,6 @@ def clean_data(df, use_fs=True):
     # df[df.columns] = scaler.fit_transform(df[df.columns])
     # print(df.info())
     # print('\nFeature Selector analysis')
-    # feature selector
     return df
 
 
@@ -61,7 +60,7 @@ def train_predict(algo_name, x, y, clf, params, create_submission=False):
         test_df = pd.read_csv('test_values.csv')
         patient_ids = test_df.patient_id.values
         x_sub = clean_data(test_df.drop('patient_id', axis=1), use_fs=False).values
-        y_prob = grid.predict_proba(x_sub)[:, 1]
+        y_prob = np.round(grid.predict_proba(x_sub)[:, 1], decimals=2)
         df_out = pd.DataFrame(data={'patient_id': patient_ids, 'heart_disease_present': y_prob})
         print(df_out.head())
         df_out.to_csv('submission.csv', index=False)
@@ -69,7 +68,7 @@ def train_predict(algo_name, x, y, clf, params, create_submission=False):
         # train and score on test data
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42, stratify=y)
         grid.fit(x_train, y_train)
-        log_loss_score = log_loss(y_test, grid.predict_proba(x_test)[:, 1])
+        log_loss_score = log_loss(y_test, np.round(grid.predict_proba(x_test)[:, 1], decimals=2))
         y_score = grid.score(x_test, y_test)
         return algo_name, grid.best_score_, grid.best_params_, y_score, log_loss_score
 
